@@ -1,0 +1,38 @@
+import java.io.*;
+import java.sql.*;
+
+class MysqlCon {
+public static void main (String [] args)
+{
+    try{
+        Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/xxx?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                "xxx","xxx");
+        Statement sstmt = con.createStatement();
+        System.out.println("You're logged in");
+
+        PreparedStatement ps = con.prepareStatement("insert into project (projectname, id, files) values (?,?,?)");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        String pname =br.readLine();
+        ps.setString(1, pname);
+
+        int pid = Integer.parseInt(br.readLine());
+        ps.setInt(2,pid);
+
+        File f = new File("C:\\Users\\karol\\Pictures\\pozjez.png1");
+        FileInputStream fs = new FileInputStream(f);
+
+        ps.setBinaryStream(3, fs,(int)f.length());
+
+        int i = ps.executeUpdate();
+
+        System.out.println(i+"records affected");
+        
+        fw.close();
+        con.close();
+
+        System.out.println("File successfully retrieved");
+
+    }catch (Exception e){System.out.println(e);}
+}
+}
