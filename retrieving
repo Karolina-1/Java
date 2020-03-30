@@ -1,0 +1,37 @@
+import java.io.*;
+import java.sql.*;
+
+class MysqlCon {
+public static void main (String [] args)
+{
+    try{
+        Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/xxx?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                "xxx","xxx");
+        Statement sstmt = con.createStatement();
+        System.out.println("You're logged in");
+
+        PreparedStatement ps = con.prepareStatement("select * from project where files IS NOT NULL ");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+
+        Blob c = rs.getBlob(3);
+        InputStream r = c.getBinaryStream();
+
+
+        FileOutputStream fw = new FileOutputStream ("C:\\Users\\karol\\Pictures\\pozjez1.png");
+        byte[] readBytes = new byte[500];
+        while (r.read(readBytes)!=-1) {
+            fw.write(readBytes);
+        }
+
+        fw.close();
+        con.close();
+
+        System.out.println("File successfully retrieved");
+
+    }catch (Exception e){System.out.println(e);}
+}
+}
